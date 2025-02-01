@@ -4,11 +4,14 @@ import { food_list } from "../../assets/frontend_assets/assets";
 
 const FoodDisplay = ({ category }) => {
   return (
-    <div id="food-display" className="mt-[30px]">
-      <h2 className="text-[max(2vw,24px)] font-semibold">
+    <div id="food-display" className="mt-8 px-4 sm:px-6 md:px-10 lg:px-20">
+      {/* Heading */}
+      <h2 className="text-lg md:text-xl lg:text-2xl font-semibold text-[#262626]">
         Top dishes near you
       </h2>
-      <div className="grid mt-[30px] gap-[30px] grid-cols-4">
+
+      {/* Grid Container */}
+      <div className="grid mt-8 gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {food_list.map((item, index) => {
           if (category === "All" || item.category === category) {
             return (
@@ -21,7 +24,6 @@ const FoodDisplay = ({ category }) => {
                 image={item.image}
               />
             );
-          } else {
           }
         })}
       </div>

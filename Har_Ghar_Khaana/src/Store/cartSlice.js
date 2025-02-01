@@ -6,7 +6,6 @@ const cartSlice = createSlice({
   reducers: {
     addItem: (state, action) => {
       const itemId = action.payload; // Use item ID as the key
-      console.log("Add: ",itemId);
       if (state[itemId]) {
         state[itemId] += 1; // Increment quantity if item exists in the cart
       } else {
@@ -15,7 +14,6 @@ const cartSlice = createSlice({
     },
     removeItem: (state, action) => {
       const itemId = action.payload;
-      console.log("Sub: ", itemId);
       if (state[itemId]) {
         state[itemId] -= 1; // Decrement quantity
         if (state[itemId] <= 0) {
