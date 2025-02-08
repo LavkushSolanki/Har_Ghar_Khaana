@@ -1,0 +1,22 @@
+  // this type==module in package.json helps in importing things in form of a module
+
+Q) How do you created the multer setup in the routes folder ??
+multer.diskStorage({}):
+Configures how files will be stored on the server (in a folder).
+destination: "uploads":
+Specifies the folder (uploads/) where images will be stored.
+filename: (req, file, cb) => { ... }:
+Defines how the file should be named.
+Uses Date.now() to create a unique filename.
+Appends file.originalname (original filename uploaded by the user).
+Example: If the user uploads pizza.jpg, it will be saved as:
+
+Creates an upload middleware instance using the storage configuration above.
+This will handle single-file uploads when a request is made.
+
+Defines a POST route at /add for adding new food items.
+upload.single("image"):
+This middleware will handle the file upload before calling addFood.
+"image" is the field name used in the form where the user uploads an image.
+addFood:
+The controller function that will process the request (insert food data into MongoDB).
