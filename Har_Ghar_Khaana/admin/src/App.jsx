@@ -10,17 +10,18 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
-    <div>
+    <div className="h-screen flex flex-col bg-gray-100">
       <ToastContainer />
-      <Navbar />
-      <hr />
-      <div className="flex">
+      {/* <Navbar /> */}
+      <div className="flex flex-grow">
         <Sidebar />
-        <Routes>
-          <Route path="/add" element={<Add />} />
-          <Route path="/list" element={<List />} />
-          <Route path="/orders" element={<Orders />} />
-        </Routes>
+        <div className="flex-grow p-6 bg-white shadow-md rounded-lg">
+          <Routes>
+            <Route path="/add" element={<Add />} />
+            <Route path="/list" element={<List />} />
+            <Route path="/orders" element={<Orders />} />
+          </Routes>
+        </div>
       </div>
     </div>
   );

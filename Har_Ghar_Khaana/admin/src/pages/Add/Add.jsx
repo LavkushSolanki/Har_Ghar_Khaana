@@ -28,74 +28,98 @@ const Add = () => {
     formData.append("category", data.category);
     formData.append("image", image);
 
-    const response = await axios.post(`${url}/api/food/add`, formData);
-    if (response.data.success) {
-      setData({
-        name: "",
-        description: "",
-        price: "",
-        category: "Salad",
-      });
-      setImage(false);
-      toast.success(response.data.message);
-    } else {
-      toast.error(response.data.message);
+    try {
+      const response = await axios.post(`${url}/api/food/add`, formData);
+      if (response.data.success) {
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "Salad",
+        });
+        setImage(false);
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("An error occurred while adding the product.");
     }
   };
 
   return (
-    <div className="w-[70%] ml-[max(5vw,25px)] mt-[50px] text-[#6d6d6d] text-[16px]">
-      <form className="flex-colm">
-        <div className="flex-colm ">
-          <p>Upload Image</p>
-          <label htmlFor="image">
+    <div className="flex justify-center items-center w-full min-h-screen bg-gray-100 p-5">
+      <form
+        className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6 flex flex-col gap-6"
+        onSubmit={onSubmitHandler}
+      >
+        {/* Image Upload */}
+        <div className="flex flex-col gap-2 items-center">
+          <p className="font-medium text-gray-700">Upload Image</p>
+          <label htmlFor="image" className="cursor-pointer">
             <img
-              className="w-[120px] cursor-pointer"
+              className="w-32 h-32 rounded-md border border-gray-300 object-cover"
               src={image ? URL.createObjectURL(image) : assets.upload_area}
-              alt=""
+              alt="Upload"
             />
           </label>
           <input
-            onChange={(e) => setImage(e.target.files[0])}
             type="file"
             id="image"
             hidden
+            onChange={(e) => setImage(e.target.files[0])}
             required
           />
         </div>
-        <div className="flex-colm w-[max(40%,280px)]">
-          <p>Product name</p>
+
+        {/* Product Name */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="name" className="font-medium text-gray-700">
+            Product Name
+          </label>
           <input
-            onChange={onChangeHandler}
-            className="p-[10px]"
             type="text"
-            value={data.name}
             name="name"
-            placeholder="Type here"
-            id=""
-          />
-        </div>
-        <div className="flex-colm w-[max(40%,280px)]">
-          <p>Product description</p>
-          <textarea
+            id="name"
+            value={data.name}
             onChange={onChangeHandler}
-            value={data.description}
-            className="p-[10px]"
-            rows="6"
-            type="text"
-            name="description"
-            placeholder="Write here"
-            id=""
+            placeholder="Type here"
+            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+            required
           />
         </div>
-        <div className="flex gap-[30px]">
-          <div>
-            <p>Product Category</p>
+
+        {/* Product Description */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="description" className="font-medium text-gray-700">
+            Product Description
+          </label>
+          <textarea
+            name="description"
+            id="description"
+            value={data.description}
+            onChange={onChangeHandler}
+            placeholder="Write here"
+            rows="4"
+            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+            required
+          ></textarea>
+        </div>
+
+        {/* Category and Price */}
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Category */}
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="category" className="font-medium text-gray-700">
+              Product Category
+            </label>
             <select
-              onChange={onChangeHandler}
-              value={data.category}
-              className="max-w-[120px] p-[10px]"
               name="category"
+              id="category"
+              value={data.category}
+              onChange={onChangeHandler}
+              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+              required
             >
               <option value="Salad">Salad</option>
               <option value="Rolls">Rolls</option>
@@ -107,24 +131,31 @@ const Add = () => {
               <option value="Noodles">Noodles</option>
             </select>
           </div>
-          <div>
-            <p>Product Price</p>
+
+          {/* Price */}
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="price" className="font-medium text-gray-700">
+              Product Price
+            </label>
             <input
-              onChange={onChangeHandler}
-              value={data.price}
-              className="max-w-[120px] p-[10px]"
               type="number"
               name="price"
-              placeholder="20"
+              id="price"
+              value={data.price}
+              onChange={onChangeHandler}
+              placeholder="Enter price"
+              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+              required
             />
           </div>
         </div>
+
+        {/* Submit Button */}
         <button
-          className="max-w-[120px] border-none bg-black text-white cursor-pointer"
           type="submit"
-          onClick={onSubmitHandler}
+          className="w-full bg-black text-white py-3 rounded-md font-medium hover:bg-gray-800 transition-all"
         >
-          Add
+          Add Product
         </button>
       </form>
     </div>

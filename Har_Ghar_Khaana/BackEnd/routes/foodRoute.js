@@ -20,6 +20,6 @@ const upload = multer({ storage: storage });
 
 foodRouter.post("/add", upload.single("image"), addFood);
 foodRouter.get("/list", listFood);
-foodRouter.delete("/remove", removeFood);
+foodRouter.delete("/remove/:foodId", removeFood);
 
 export default foodRouter;
