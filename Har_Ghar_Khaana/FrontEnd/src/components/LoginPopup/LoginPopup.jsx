@@ -1,12 +1,41 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "../../Store/authSlice"; // Import login action
 import { assets } from "../../assets/frontend_assets/assets";
+import { toast } from "react-toastify";
 
 const LoginPopup = ({ setShowLogin }) => {
+  const dispatch = useDispatch(); // Redux dispatch
+  const url = "http://localhost:5000";
   const [currState, setCurrState] = useState("Login");
+  const [data, setData] = useState({ name: "", email: "", password: "" });
+
+  const onChangeHandler = (event) => {
+    setData({ ...data, [event.target.name]: event.target.value });
+  };
+
+  const onLogin = async (event) => {
+    event.preventDefault();
+    let newUrl =
+      currState === "Login"
+        ? `${url}/api/user/login`
+        : `${url}/api/user/register`;
+
+    const response = await axios.post(newUrl, data);
+    if (response.data.success) {
+      dispatch(login(response.data.token)); // Store token in Redux
+      setShowLogin(false);
+    } else {
+      toast(response.data.message);
+    }
+  };
+
   return (
     <div className="absolute z-[1] w-[100%] h-[100%] bg-[#00000090] grid">
       <form
         action=""
+        onSubmit={onLogin}
         className="place-self-center w-[max(23vw,330px)] text-[#808080] bg-white flex flex-col gap-[25px] px-[30px] py-[25px] rounded-[8px] text-[14px]"
       >
         <div className="flex justify-between items-center text-black">
@@ -27,6 +56,9 @@ const LoginPopup = ({ setShowLogin }) => {
               type="text"
               placeholder="Your name"
               required
+              name="name"
+              onChange={onChangeHandler}
+              value={data.name}
             />
           )}
           <input
@@ -34,15 +66,24 @@ const LoginPopup = ({ setShowLogin }) => {
             type="email"
             placeholder="Your Email"
             required
+            name="email"
+            onChange={onChangeHandler}
+            value={data.email}
           />
           <input
             className="outline-2 border-[1px solid #cfcfcf] p-[10px] rounded-[4px]"
             type="password"
             placeholder="Your Password"
+            name="password"
+            onChange={onChangeHandler}
+            value={data.password}
             required
           />
         </div>
-        <button className="border-none p-[10px] rounded-[4px] text-white cursor-pointer bg-[tomato] text-[15px]">
+        <button
+          type="submit"
+          className="border-none p-[10px] rounded-[4px] text-white cursor-pointer bg-[tomato] text-[15px]"
+        >
           {currState === "Sign Up" ? "Create account" : "Login"}
         </button>
         <div className="flex items-start gap-[8px] mt-[15px]">

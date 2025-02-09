@@ -1,28 +1,37 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addItem, removeItem, clearCart } from "../../Store/cartSlice";
-import { food_list } from "../../assets/frontend_assets/assets";
 import { useNavigate } from "react-router-dom";
 
 const Cart = ({ setCost }) => {
   const navigate = useNavigate();
-
-  const cart = useSelector((state) => state.cart); // Get cart from Redux
   const dispatch = useDispatch();
 
-  // Filter food_list that are in the cart
-  const cartItems = Object.keys(cart).map((id) => {
-    return {
-      ...food_list.find((item) => item._id === id), // Find product details
-      quantity: cart[id], // Get quantity from cart state
-    };
-  });
+  const cart = useSelector((state) => state.cart); // Cart data from Redux
+  const foodList = useSelector((state) => state.foods.items); // Fetched food items
 
+  const url = "http://localhost:5000";
+
+  // Ensure food data is available before mapping
+  if (!foodList || !foodList.data) {
+    return <p>Loading food items...</p>;
+  }
+
+  // Get food items from cart and their details from Redux
+  const cartItems = Object.keys(cart)
+    .map((id) => {
+      const foodItem = foodList.data.find((item) => item._id === id); // Get food item details
+      if (!foodItem) return null;
+      return { ...foodItem, quantity: cart[id] }; // Attach quantity from cart state
+    })
+    .filter((item) => item !== null); // Remove any null values
+
+  // Calculate total cost
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const deliveryFee = subtotal > 0 ? 50 : 0; // Add a delivery fee
+  const deliveryFee = subtotal > 0 ? 50 : 0; // Fixed delivery fee
   const total = subtotal + deliveryFee;
   setCost(total);
 
@@ -35,7 +44,6 @@ const Cart = ({ setCost }) => {
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-gray-300">
-            {/* Table Header */}
             <thead>
               <tr className="bg-gray-100 text-center text-gray-600 font-semibold">
                 <th className="p-3 border border-gray-300">Item</th>
@@ -45,8 +53,6 @@ const Cart = ({ setCost }) => {
                 <th className="p-3 border border-gray-300">Total</th>
               </tr>
             </thead>
-
-            {/* Table Body */}
             <tbody>
               {cartItems.map((item) => (
                 <tr
@@ -55,7 +61,7 @@ const Cart = ({ setCost }) => {
                 >
                   <td className="p-3">
                     <img
-                      src={item.image}
+                      src={`${url}/images/${item.image}`}
                       alt={item.name}
                       className="w-20 h-20 rounded-2xl mx-auto"
                     />
@@ -87,7 +93,6 @@ const Cart = ({ setCost }) => {
             </tbody>
           </table>
 
-          {/* Clear Cart Button */}
           <div className="flex justify-end mt-6">
             <button
               className="bg-black cursor-pointer text-white px-6 py-2 rounded hover:bg-gray-900"
@@ -99,7 +104,6 @@ const Cart = ({ setCost }) => {
         </div>
       )}
 
-      {/* Promo Code Section */}
       <div className="mt-3 p-6 rounded-lg">
         <h3 className="text-xl font-semibold mb-4">Apply Promo Code</h3>
         <div className="flex items-center">
@@ -114,7 +118,6 @@ const Cart = ({ setCost }) => {
         </div>
       </div>
 
-      {/* Cart Total Section */}
       <div className="mt-1 p-6 rounded-lg">
         <h3 className="text-2xl font-semibold mb-4">Cart Summary</h3>
         <div className="flex justify-between text-lg mb-2">

@@ -6,6 +6,8 @@ import Cart from "./pages/Cart/Cart";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import Footer from "./components/Footer/Footer";
 import LoginPopup from "./components/LoginPopup/LoginPopup";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -15,6 +17,7 @@ const App = () => {
       {showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
       {/* Wrapper */}
       <div className="app mx-auto">
+        <ToastContainer />
         {/* Navbar */}
         <Navbar setShowLogin={setShowLogin} />
 
