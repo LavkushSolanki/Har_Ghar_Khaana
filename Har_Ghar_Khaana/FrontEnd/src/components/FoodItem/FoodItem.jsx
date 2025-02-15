@@ -1,22 +1,28 @@
-import React from "react";
-import { assets } from "../../assets/frontend_assets/assets";
-import { addItem, removeItem } from "../../Store/cartSlice";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { addItem, removeItem, fetchCart, resetCart } from "../../Store/cartSlice";
+import { assets } from "../../assets/frontend_assets/assets";
 
 const FoodItem = ({ id, name, price, desc, image }) => {
   const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart);
-  const quantity = cart[id] || 0;
+  const cart = useSelector((state) => state.cart.items);
+  const authToken = localStorage.getItem("authToken"); // Get auth token
+
+  // Fetch cart when user logs in, reset when user logs out
+  useEffect(() => {
+    if (authToken) {
+      dispatch(fetchCart()); // Fetch cart when logged in
+    } else {
+      dispatch(resetCart()); // Reset cart when logged out
+    }
+  }, [authToken, dispatch]);
+
+  const quantity = cart[id] || 0; // Ensure default 0
 
   return (
     <div className="w-full max-w-xs sm:max-w-sm mx-auto rounded-2xl shadow-lg">
-      {/* Image and Action Icons */}
       <div className="relative">
-        <img
-          className="w-full rounded-t-2xl object-cover"
-          src={image}
-          alt={name}
-        />
+        <img className="w-full rounded-t-2xl object-cover" src={image} alt={name} />
         {quantity === 0 ? (
           <img
             className="absolute w-8 sm:w-10 right-4 bottom-4 cursor-pointer rounded-full"
@@ -43,25 +49,13 @@ const FoodItem = ({ id, name, price, desc, image }) => {
         )}
       </div>
 
-      {/* Food Details */}
       <div className="p-4 sm:p-6">
-        {/* Title and Rating */}
         <div className="flex justify-between items-center mb-3">
           <p className="text-base sm:text-lg font-semibold">{name}</p>
-          <img
-            className="w-14 sm:w-16"
-            src={assets.rating_starts}
-            alt="Rating"
-          />
+          <img className="w-14 sm:w-16" src={assets.rating_starts} alt="Rating" />
         </div>
-
-        {/* Description */}
         <p className="text-sm sm:text-base text-[#676767] mb-4">{desc}</p>
-
-        {/* Price */}
-        <p className="text-tomato text-lg sm:text-xl font-semibold">
-          &#8377;{price}
-        </p>
+        <p className="text-tomato text-lg sm:text-xl font-semibold">&#8377;{price}</p>
       </div>
     </div>
   );

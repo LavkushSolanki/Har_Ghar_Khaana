@@ -1,45 +1,55 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addItem, removeItem, clearCart } from "../../Store/cartSlice";
+import {
+  addItem,
+  removeItem,
+  clearCart,
+  fetchCart,
+} from "../../Store/cartSlice";
 import { useNavigate } from "react-router-dom";
 
 const Cart = ({ setCost }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const cart = useSelector((state) => state.cart); // Cart data from Redux
-  const foodList = useSelector((state) => state.foods.items); // Fetched food items
-
+  const navigate = useNavigate();
   const url = "http://localhost:5000";
+  const cart = useSelector((state) => state.cart.items || {});
+  const products = useSelector((state) => state.foods.items?.data || []);
+  const loading = useSelector((state) => state.cart.loading);
+  const authToken = localStorage.getItem("authToken");
 
-  // Ensure food data is available before mapping
-  if (!foodList || !foodList.data) {
-    return <p>Loading food items...</p>;
-  }
+  useEffect(() => {
+    if (authToken) {
+      dispatch(fetchCart());
+    }
+  }, [dispatch]);
 
-  // Get food items from cart and their details from Redux
-  const cartItems = Object.keys(cart)
-    .map((id) => {
-      const foodItem = foodList.data.find((item) => item._id === id); // Get food item details
-      if (!foodItem) return null;
-      return { ...foodItem, quantity: cart[id] }; // Attach quantity from cart state
+  const cartItems = Object.entries(cart)
+    .map(([itemId, quantity]) => {
+      const product = products.find((p) => p._id === itemId);
+      return product ? { ...product, quantity } : null;
     })
-    .filter((item) => item !== null); // Remove any null values
+    .filter(Boolean);
 
   // Calculate total cost
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const deliveryFee = subtotal > 0 ? 50 : 0; // Fixed delivery fee
+  const deliveryFee = subtotal > 0 ? 50 : 0;
   const total = subtotal + deliveryFee;
-  setCost(total);
+
+  // ✅ Use useEffect to update the parent state (setCost)
+  useEffect(() => {
+    setCost(total);
+  }, [total, setCost]);
 
   return (
     <div className="p-6">
       <h2 className="text-3xl font-bold text-center mb-6">Your Cart</h2>
 
-      {cartItems.length === 0 ? (
+      {loading ? (
+        <p>Loading cart...</p>
+      ) : cartItems.length === 0 ? (
         <p className="text-gray-500 text-center text-lg">Your cart is empty.</p>
       ) : (
         <div className="overflow-x-auto">
@@ -61,7 +71,7 @@ const Cart = ({ setCost }) => {
                 >
                   <td className="p-3">
                     <img
-                      src={`${url}/images/${item.image}`}
+                      src={url + "/images/" + item.image}
                       alt={item.name}
                       className="w-20 h-20 rounded-2xl mx-auto"
                     />
@@ -93,14 +103,14 @@ const Cart = ({ setCost }) => {
             </tbody>
           </table>
 
-          <div className="flex justify-end mt-6">
+          {/* <div className="flex justify-end mt-6">
             <button
               className="bg-black cursor-pointer text-white px-6 py-2 rounded hover:bg-gray-900"
               onClick={() => dispatch(clearCart())}
             >
               Clear Cart
             </button>
-          </div>
+          </div> */}
         </div>
       )}
 

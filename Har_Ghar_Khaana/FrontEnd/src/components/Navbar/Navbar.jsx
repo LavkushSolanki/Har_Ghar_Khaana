@@ -4,6 +4,7 @@ import { Link as ScrollLink } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Store/authSlice";
+import { fetchCart } from "../../Store/cartSlice";
 
 const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
@@ -14,9 +15,16 @@ const Navbar = ({ setShowLogin }) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
+    localStorage.removeItem("authToken"); // Remove token
+    window.location.reload(); // Refresh to reset state
     dispatch(logout());
     setDropdownOpen(false);
   };
+  useEffect(() => {
+    if (auth.token) {
+      dispatch(fetchCart()); // Fetch cart only when user is logged in
+    }
+  }, [auth.token]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -70,13 +78,17 @@ const Navbar = ({ setShowLogin }) => {
 
         {/* Right Section */}
         <div className="flex items-center gap-6">
-          {/* Cart Icon */}
           <RouterLink to="/cart">
             <div className="relative cursor-pointer">
               <img src={assets.basket_icon} alt="Basket" className="w-[25px]" />
-              <div className="absolute top-[-5px] right-[-5px] bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                {Object.keys(cart).length}
-              </div>
+              {Object.keys(cart?.items || {}).length > 0 && (
+                <div className="absolute top-[-5px] right-[-5px] bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                  {Object.values(cart?.items || {}).reduce(
+                    (sum, qty) => sum + qty,
+                    0
+                  )}
+                </div>
+              )}
             </div>
           </RouterLink>
 
