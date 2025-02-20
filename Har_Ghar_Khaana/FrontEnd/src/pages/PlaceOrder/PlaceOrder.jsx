@@ -2,23 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { fetchCart } from "../../Store/cartSlice";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
-const PlaceOrder = ({ cost }) => {
-  const navigate = useNavigate(); // Initialize the navigate function
+const PlaceOrder = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const url = "http://localhost:5000";
+  const authToken = localStorage.getItem("authToken");
 
-  // Fetch cart from Redux store
+  // Fetch cart and products from Redux store
   const cart = useSelector((state) => state.cart.items || {});
   const products = useSelector((state) => state.foods.items?.data || []);
-  const authToken = localStorage.getItem("authToken");
 
   useEffect(() => {
     if (authToken) {
       dispatch(fetchCart());
     }
-  }, [dispatch]);
+  }, [dispatch, authToken]);
 
   // Create cartItems list
   const cartItems = Object.entries(cart)
@@ -27,6 +27,14 @@ const PlaceOrder = ({ cost }) => {
       return product ? { ...product, quantity } : null;
     })
     .filter(Boolean);
+
+  // Calculate total cost
+  const subtotal = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+  const deliveryFee = subtotal > 0 ? 50 : 0;
+  const cost = subtotal + deliveryFee;
 
   // State for delivery information
   const [data, setData] = useState({
@@ -41,13 +49,16 @@ const PlaceOrder = ({ cost }) => {
     phone: "",
   });
 
-  // Handle form input changes
+  // Handle input changes
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Function to place an order
+  // Check if all fields are filled
+  const isFormValid = Object.values(data).every((value) => value.trim() !== "");
+
+  // Place order function
   const placeOrder = async (event) => {
     event.preventDefault();
 
@@ -55,56 +66,48 @@ const PlaceOrder = ({ cost }) => {
       alert("Please log in to place an order.");
       return;
     }
-    // Prepare order data
-    // let orderItems = cartItems.map((item) => ({
-    //   ...item,
-    //   quantity: item.quantity,
-    // }));
 
-    // let orderData = {
-    //   address: data,
-    //   items: orderItems,
-    //   amount: 410,
-    // };
-    // console.log("orderdata is: ", orderData);
-    // try {
-    //   let response = await axios.post(url + "/api/order/place", orderData, {
-    //     headers: { authToken },
-    //   });
+    if (!isFormValid) {
+      alert("Please fill all the fields before proceeding.");
+      return;
+    }
 
-    //   if (response.data.success) {
-    //     const { session_url } = response.data;
-    //     window.location.replace(session_url);
-    //   } else {
-    //     alert("Error placing order.");
-    //   }
-    // } catch (error) {
-    //   alert("Failed to place order.");
-    // }
-    let orderItems = cartItems.map((item) => ({
+    const orderItems = cartItems.map((item) => ({
       _id: item._id,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
     }));
 
-    let orderData = {
-      // userId: localStorage.getItem("userId"), // Store user ID from local storage
+    const orderData = {
       address: data,
       items: orderItems,
-      amount: 680,
+      amount: cost,
     };
-    let response = await axios.post(url + "/api/order/place", orderData, {
-      headers: { authToken },
-    });
 
-    if (response.data.success) {
-      alert("Order placed successfully!");
-      navigate("/");
-    } else {
-      alert("Error placing order");
+    try {
+      let response = await axios.post(url + "/api/order/place", orderData, {
+        headers: { authToken },
+      });
+
+      if (response.data.success) {
+        alert("Order placed successfully!");
+        navigate("/");
+      } else {
+        alert("Error placing order.");
+      }
+    } catch (error) {
+      alert("Failed to place order.");
     }
   };
+
+  useEffect(() => {
+    if (!authToken) {
+      navigate("/cart");
+    } else if (cost === 0) {
+      navigate("/cart");
+    }
+  }, [authToken]);
 
   return (
     <div className="flex flex-col md:flex-row justify-center items-start p-6 md:p-10 gap-8">
@@ -116,89 +119,89 @@ const PlaceOrder = ({ cost }) => {
         <form onSubmit={placeOrder} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input
-              required
               type="text"
               name="firstName"
               value={data.firstName}
               onChange={onChangeHandler}
               placeholder="First Name"
+              required
               className="border border-gray-300 rounded-lg p-4"
             />
             <input
-              required
               type="text"
               name="lastName"
               value={data.lastName}
               onChange={onChangeHandler}
               placeholder="Last Name"
+              required
               className="border border-gray-300 rounded-lg p-4"
             />
           </div>
           <input
-            required
             type="email"
             name="email"
             value={data.email}
             onChange={onChangeHandler}
             placeholder="Email Address"
+            required
             className="w-full border border-gray-300 rounded-lg p-4"
           />
           <input
-            required
             type="text"
             name="street"
             value={data.street}
             onChange={onChangeHandler}
             placeholder="Street"
+            required
             className="w-full border border-gray-300 rounded-lg p-4"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input
-              required
               type="text"
               name="city"
               value={data.city}
               onChange={onChangeHandler}
               placeholder="City"
+              required
               className="border border-gray-300 rounded-lg p-4"
             />
             <input
-              required
               type="text"
               name="state"
               value={data.state}
               onChange={onChangeHandler}
               placeholder="State"
+              required
               className="border border-gray-300 rounded-lg p-4"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input
-              required
               type="text"
               name="zipcode"
               value={data.zipcode}
               onChange={onChangeHandler}
               placeholder="Zip Code"
+              required
               className="border border-gray-300 rounded-lg p-4"
             />
             <input
-              required
               type="text"
               name="country"
               value={data.country}
               onChange={onChangeHandler}
               placeholder="Country"
+              required
               className="border border-gray-300 rounded-lg p-4"
             />
           </div>
           <input
-            required
             type="text"
             name="phone"
             value={data.phone}
             onChange={onChangeHandler}
             placeholder="Phone"
+            required
             className="w-full border border-gray-300 rounded-lg p-4"
           />
         </form>
@@ -226,8 +229,13 @@ const PlaceOrder = ({ cost }) => {
         </div>
         <button
           onClick={placeOrder}
-          className="bg-[tomato] text-white mt-4 py-3 px-10 rounded-[4px] cursor-pointer"
+          className={`mt-4 py-3 px-10 rounded-[4px] cursor-pointer ${
+            isFormValid
+              ? "bg-[tomato] text-white"
+              : "bg-gray-400 cursor-not-allowed"
+          }`}
           type="submit"
+          disabled={!isFormValid}
         >
           Proceed to Payment
         </button>

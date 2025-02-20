@@ -13,10 +13,10 @@ const Footer = () => {
         <div className="flex flex-col items-start gap-6">
           <img src={assets.logo} alt="Logo" className="w-36" />
           <p className="text-sm md:text-base leading-relaxed">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos
-            officiis nesciunt quia fuga? Voluptates repudiandae officia amet
-            sequi alias cupi totam pariatur quaerat ducimus beatae velit
-            consequuntur placeat iusto sed, hic consequatur. Perspiciatis.
+            Har Ghar Khaana - A seamless online food ordering platform
+            connecting users with delicious homemade and restaurant-quality
+            meals. Enjoy easy ordering, real-time order tracking, and a
+            hassle-free experience!
           </p>
           <div className="flex gap-4">
             <img

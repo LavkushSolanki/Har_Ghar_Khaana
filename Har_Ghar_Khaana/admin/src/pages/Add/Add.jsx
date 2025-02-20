@@ -10,7 +10,7 @@ const Add = () => {
     name: "",
     description: "",
     price: "",
-    category: "Salad",
+    category: "Thali",
   });
 
   const onChangeHandler = (event) => {
@@ -35,7 +35,7 @@ const Add = () => {
           name: "",
           description: "",
           price: "",
-          category: "Salad",
+          category: "Thali",
         });
         setImage(false);
         toast.success(response.data.message);
@@ -121,14 +121,14 @@ const Add = () => {
               className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
               required
             >
-              <option value="Salad">Salad</option>
-              <option value="Rolls">Rolls</option>
+              <option value="Indian Thali">Thali</option>
+              <option value="Street Special">Street Special</option>
               <option value="Deserts">Deserts</option>
-              <option value="Sandwich">Sandwich</option>
-              <option value="Cake">Cake</option>
-              <option value="Pure Veg">Pure Veg</option>
-              <option value="Pasta">Pasta</option>
-              <option value="Noodles">Noodles</option>
+              <option value="Bread and Roti">Bread and Roti</option>
+              <option value="Biryani and Rice">Biryani and Rice</option>
+              <option value="Beverages">Beverages</option>
+              <option value="SandWich">Sandwich</option>
+              <option value="Rolls">Rolls</option>
             </select>
           </div>
 

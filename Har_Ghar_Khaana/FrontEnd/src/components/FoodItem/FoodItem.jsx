@@ -1,6 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, removeItem, fetchCart, resetCart } from "../../Store/cartSlice";
+import {
+  addItem,
+  removeItem,
+  fetchCart,
+  resetCart,
+} from "../../Store/cartSlice";
 import { assets } from "../../assets/frontend_assets/assets";
 
 const FoodItem = ({ id, name, price, desc, image }) => {
@@ -20,9 +25,17 @@ const FoodItem = ({ id, name, price, desc, image }) => {
   const quantity = cart[id] || 0; // Ensure default 0
 
   return (
-    <div className="w-full max-w-xs sm:max-w-sm mx-auto rounded-2xl shadow-lg">
+    <div className="w-full max-w-xs sm:max-w-sm mx-auto rounded-2xl shadow-lg bg-white transition-transform hover:scale-105">
       <div className="relative">
-        <img className="w-full rounded-t-2xl object-cover" src={image} alt={name} />
+        {/* Image with Fixed Size and Lazy Loading */}
+        <img
+          className="w-full h-48 sm:h-56 rounded-t-2xl object-cover object-center"
+          src={image}
+          alt={name}
+          loading="lazy"
+        />
+
+        {/* Add to Cart / Quantity Section */}
         {quantity === 0 ? (
           <img
             className="absolute w-8 sm:w-10 right-4 bottom-4 cursor-pointer rounded-full"
@@ -49,13 +62,21 @@ const FoodItem = ({ id, name, price, desc, image }) => {
         )}
       </div>
 
+      {/* Item Details */}
       <div className="p-4 sm:p-6">
         <div className="flex justify-between items-center mb-3">
           <p className="text-base sm:text-lg font-semibold">{name}</p>
-          <img className="w-14 sm:w-16" src={assets.rating_starts} alt="Rating" />
+          <img
+            className="w-14 sm:w-16"
+            src={assets.rating_starts}
+            alt="Rating"
+            loading="lazy"
+          />
         </div>
         <p className="text-sm sm:text-base text-[#676767] mb-4">{desc}</p>
-        <p className="text-tomato text-lg sm:text-xl font-semibold">&#8377;{price}</p>
+        <p className="text-tomato text-lg sm:text-xl font-semibold">
+          &#8377;{price}
+        </p>
       </div>
     </div>
   );

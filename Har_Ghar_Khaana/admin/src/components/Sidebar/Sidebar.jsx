@@ -37,7 +37,7 @@ const Sidebar = () => {
           }`}
         >
           <img
-            className={`w-[100px] transition-all duration-300 ${
+            className={`h-36 w-56 transition-all duration-300 ${
               isOpen ? "block" : "hidden"
             }`}
             src={assets.logo}

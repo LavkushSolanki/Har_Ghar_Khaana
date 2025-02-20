@@ -45,11 +45,7 @@ const Navbar = ({ setShowLogin }) => {
       <div className="flex justify-between items-center py-4 px-6 md:px-12">
         {/* Logo */}
         <RouterLink to="/">
-          <img
-            src={assets.logo}
-            alt="Logo"
-            className="w-[120px] md:w-[150px] cursor-pointer"
-          />
+          <img src={assets.logo} alt="Logo" className="h-20 w-40 cursor-pointer" />
         </RouterLink>
 
         {/* Navigation Links (Hidden on Mobile) */}
@@ -104,7 +100,7 @@ const Navbar = ({ setShowLogin }) => {
               {dropdownOpen && (
                 <ul className="absolute right-0 w-[150px] mt-2 bg-white shadow-md rounded-md">
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    <RouterLink className="flex" to="/profile">
+                    <RouterLink className="flex" to="/myorders">
                       <img src={assets.bag_icon} alt="" />
                       Orders
                     </RouterLink>
