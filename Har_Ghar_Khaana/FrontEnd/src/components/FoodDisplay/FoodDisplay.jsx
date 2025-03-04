@@ -20,6 +20,8 @@ const FoodDisplay = ({ category }) => {
     dispatch(fetchFoods());
   }, [dispatch]);
 
+  console.log("Food items are: ", foodList);
+
   return (
     <div id="food-display" className="mt-8 px-4 sm:px-6 md:px-10 lg:px-20">
       <h2 className="text-lg md:text-xl lg:text-2xl font-semibold text-[#262626]">

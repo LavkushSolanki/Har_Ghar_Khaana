@@ -5,12 +5,13 @@ dotenv.config();
 
 export const connectDB = async () => {
   try {
+    // `mongodb+srv://lavkushsolanki:Lavkush12082004%40%23@clusterfood.ozh5t.mongodb.net/ClusterFood?retryWrites=true&w=majority`;
     await mongoose.connect(
       `mongodb+srv://lavkushsolanki:Lavkush12082004%40%23@clusterfood.ozh5t.mongodb.net/ClusterFood?retryWrites=true&w=majority`
     );
-    console.log("Database Connected Successfully!");
+    console.log("✅ Database Connected Successfully!");
   } catch (error) {
-    console.error("Database Connection Failed:", error.message);
-    process.exit(1); // Exit process with failure
+    console.error("❌ Database Connection Failed:", error.message);
+    process.exit(1);
   }
 };
