@@ -4,7 +4,7 @@ import { assets } from "../../assets/frontend_assets/assets";
 
 const MyOrders = () => {
   const [data, setData] = useState([]);
-  const url = "http://localhost:5000";
+  const url = "https://har-ghar-khaana.onrender.com";
   const authToken = localStorage.getItem("authToken");
 
   const fetchOrders = async () => {

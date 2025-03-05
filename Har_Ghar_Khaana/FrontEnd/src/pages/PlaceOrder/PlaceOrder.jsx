@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const PlaceOrder = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const url = "http://localhost:5000";
+  const url = "https://har-ghar-khaana.onrender.com";
   const authToken = localStorage.getItem("authToken");
 
   // Fetch cart and products from Redux store

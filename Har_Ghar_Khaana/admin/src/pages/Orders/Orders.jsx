@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { assets } from "../../assets/assets.js";
 
 const Orders = () => {
-  const url = "http://localhost:5000";
+  const url = "https://har-ghar-khaana.onrender.com";
   const [orders, setOrders] = useState([]);
 
   const fetchAllOrders = async () => {

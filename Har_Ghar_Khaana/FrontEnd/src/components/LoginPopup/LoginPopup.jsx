@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const LoginPopup = ({ setShowLogin }) => {
   const dispatch = useDispatch(); // Redux dispatch
-  const url = "http://localhost:5000";
+  const url = "https://har-ghar-khaana.onrender.com";
   const [currState, setCurrState] = useState("Login");
   const [data, setData] = useState({ name: "", email: "", password: "" });
 

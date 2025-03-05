@@ -14,7 +14,7 @@ const FoodDisplay = ({ category }) => {
   const foodList = useSelector((state) => state.foods.items); // Get foods from Redux
   const loading = useSelector((state) => state.foods.loading);
   const error = useSelector((state) => state.foods.error);
-  const url = "http://localhost:5000";
+  const url = "https://har-ghar-khaana.onrender.com";
 
   useEffect(() => {
     dispatch(fetchFoods());

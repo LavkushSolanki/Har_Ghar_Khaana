@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 const Cart = ({ setCost }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = "http://localhost:5000";
+  const url = "https://har-ghar-khaana.onrender.com";
   const cart = useSelector((state) => state.cart.items || {});
   const products = useSelector((state) => state.foods.items?.data || []);
   const loading = useSelector((state) => state.cart.loading);

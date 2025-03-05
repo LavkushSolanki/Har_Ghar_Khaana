@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const List = () => {
-  const url = "http://localhost:5000";
+  const url = "https://har-ghar-khaana.onrender.com";
   const [list, setList] = useState([]);
 
   const fetchList = async () => {

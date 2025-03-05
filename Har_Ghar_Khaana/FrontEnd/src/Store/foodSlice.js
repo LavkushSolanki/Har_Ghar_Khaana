@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Define the API endpoint (update this based on your backend URL)
-const API_URL = "http://localhost:5000/api/food/list"; // Replace with actual API URL
+const API_URL = "https://har-ghar-khaana.onrender.com/api/food/list"; // Replace with actual API URL
 
 // Async thunk to fetch food items
 export const fetchFoods = createAsyncThunk(
